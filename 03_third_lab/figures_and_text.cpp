@@ -2,7 +2,6 @@
 #include <opencv2/opencv.hpp>
 #include <string>
 #include <iostream>
-#include "pheonix.h"
 
 
 using namespace std;
@@ -39,7 +38,7 @@ int main() {
 
             string name_figure;
             Scalar color_figure;
-            Moments poisk_center = moments(contours[i]);
+            Moments center = moments(contours[i]);
             
             if (edges_num == 4) {
                 name_figure = "Square";
@@ -59,8 +58,8 @@ int main() {
             }
             int shift = -150;
             for (int j = 0; j < already_drawn.size(); j++) {
-                int ax = int(poisk_center.m10 / poisk_center.m00);
-                int ay = int(poisk_center.m01 / poisk_center.m00);
+                int ax = int(center.m10 / center.m00);
+                int ay = int(center.m01 / center.m00);
                 int bx = int(moments(already_drawn[j]).m10 / moments(already_drawn[j]).m00);
                 int by = int(moments(already_drawn[j]).m01 / moments(already_drawn[j]).m00);
                 if (abs(ax - bx) < 5 && abs(ay - by) < 5) {
@@ -69,7 +68,7 @@ int main() {
             }
             already_drawn.push_back(contours[i]);
             drawContours(img1, contours, i, color_figure, 2);
-            Point text_coord(poisk_center.m10 / poisk_center.m00 - shift, poisk_center.m01 / poisk_center.m00);
+            Point text_coord(center.m10 / center.m00 - shift, center.m01 / center.m00);
             putText(img1, name_figure, text_coord, FONT_HERSHEY_SIMPLEX, 0.8, color_figure, 2);
         }
         imwrite("figures_res.jpg", img1);
